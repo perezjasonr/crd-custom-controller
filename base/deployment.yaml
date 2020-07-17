@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: custom-controller-example
+  namespace: crd-test
+  labels:
+    app: custom-controller-example
+spec:
+  selector:
+    matchLabels:
+      app: custom-controller-example
+  template:
+    metadata:
+      labels:
+        app: custom-controller-example
+    spec:
+      containers:
+        - name: custom-controller-example
+          image: custom-controller-example

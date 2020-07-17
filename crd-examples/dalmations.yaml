@@ -1,0 +1,49 @@
+apiVersion: "stable.example.com/v1"
+kind: Dalmation
+metadata:
+  name: dalmation-one
+  namespace: crd-test
+spec:
+  petname: "pongo"
+  spots: 20
+  collar: True
+---
+apiVersion: "stable.example.com/v1"
+kind: Dalmation
+metadata:
+  name: dalmation-two
+  namespace: crd-test
+spec:
+  petname: "purdy"
+  spots: 15
+  collar: True
+---
+apiVersion: "stable.example.com/v1"
+kind: Dalmation
+metadata:
+  name: dalmation-three-no-collar
+  namespace: crd-test
+spec:
+  petname: "patch"
+  spots: 7
+  collar: False
+---
+# collar defaults to false if omitted
+apiVersion: "stable.example.com/v1"
+kind: Dalmation
+metadata:
+  name: dalmation-four-omit-collar
+  namespace: crd-test
+spec:
+  petname: "penny"
+  spots: 25
+---
+# expected to fail
+apiVersion: "stable.example.com/v1"
+kind: Dalmation
+metadata:
+  name: dalmation-four-no-spots
+  namespace: crd-test
+spec:
+  petname: "imposter"
+  spots: 0

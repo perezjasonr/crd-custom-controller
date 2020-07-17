@@ -1,0 +1,22 @@
+apiVersion: skaffold/v2beta5
+kind: Config
+build:
+  artifacts:
+    - image: custom-controller-example
+      # context: app
+deploy:
+  kustomize:
+    paths:
+      - overlays/dev
+
+profiles:
+  - name: some-env
+    deploy:
+      kustomize:
+        paths:
+          - overlays/some-env-dir
+  - name: first-time
+    deploy:
+      kustomize:
+        paths:
+          - overlays/first-time

@@ -1,0 +1,75 @@
+#---
+#kind: ClusterRole
+#apiVersion: rbac.authorization.k8s.io/v1
+#metadata:
+#  name: custom-controller-clusterrole
+#rules:
+#  - apiGroups: [""]
+#    resources: ["pods"]
+#    verbs: ["list"]
+
+# for now cluster-admin for custom-controller-sa in crd-test
+# total overkill, can later reel it in
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: crd-test
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  creationTimestamp: null
+  name: custom-controller-sa
+  namespace: crd-test
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: custom-controller-clusterrolebinding
+subjects:
+  - kind: ServiceAccount
+    name: custom-controller-sa
+    namespace: crd-test
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: dalmations.stable.example.com
+spec:
+  group: stable.example.com
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                petname:
+                  type: string
+                  # pattern: '^(\d+|\*)(/\d+)?(\s+(\d+|\*)(/\d+)?){4}$'
+                spots:
+                  type: integer
+                  minimum: 1 # its a dalmation, have at least 1 spot
+                  maximum: 100
+                collar:
+                  type: boolean
+                  default: False
+                evaluated:
+                  type: boolean
+                  default: False
+  scope: Namespaced
+  names:
+    plural: dalmations
+    singular: dalmation
+    kind: Dalmation
+    shortNames:
+      - dal
